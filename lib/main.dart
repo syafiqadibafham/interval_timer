@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/model/training_model.dart';
 import 'package:interval_timer/timer_page.dart';
 import 'bloc/timer_bloc.dart';
@@ -21,16 +22,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TimerBloc(),
-      child: MaterialApp(
-        title: 'Interval Timer',
-        theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-        themeMode: ThemeMode.dark,
-        home: MyHomePage(title: 'Interval Timer'),
-        debugShowCheckedModeBanner: false,
-      ),
+    return MaterialApp(
+      title: 'Interval Timer',
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      themeMode: ThemeMode.dark,
+      home: MyHomePage(title: 'Interval Timer'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -49,24 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
       interval: 1,
       trainingDuration: Duration(seconds: 0),
       breakDuration: Duration(seconds: 0));
-  Timer? timer;
-
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
-      int seconds = training.trainingDuration.inSeconds;
-      if (seconds > 0) {
-        setState(() {
-          seconds--;
-        });
-      } else {
-        stopTimer();
-      }
-    });
-  }
-
-  void stopTimer() {
-    timer?.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       step: 1,
                       value: 1,
                       textStyle: const TextStyle(fontSize: 36),
-                      iconSize: 48.0,
+                      iconSize: 44.0,
                       addIcon: const Icon(Icons.add_circle_outline),
                       subtractIcon: const Icon(Icons.remove_circle_outline),
                       iconActiveColor: Theme.of(context).colorScheme.primary,
@@ -174,8 +154,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => timerPage(
-                                      training: training,
+                                    builder: (context) => BlocProvider(
+                                      create: (context) => TimerBloc(
+                                          ticker: Ticker(),
+                                          duration: training
+                                              .trainingDuration.inSeconds),
+                                      child: timerPage(
+                                        training: training,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -186,14 +172,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => timerPage(
-                                      training: training,
-                                    ),
-                                  ),
-                                );
+                                setState(() {
+                                  training = Training(
+                                      interval: 1,
+                                      trainingDuration: Duration(seconds: 0),
+                                      breakDuration: Duration(seconds: 0));
+                                });
                               },
                               child: Text(
                                 "Reset",
