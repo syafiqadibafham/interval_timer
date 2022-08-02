@@ -120,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Text("Training Duration"),
                     ListTile(
-                      title: Text('Starting Countdown'),
-                      subtitle: Text("formatTime(_tabata.startDelay)"),
+                      title: Text('Exercise Time'),
+                      subtitle: Text(Duration(minutes: 1).toString()),
                       leading: Icon(Icons.timer),
                       onTap: () {
                         showDialog<Duration>(
@@ -129,10 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (BuildContext context) {
                             return DurationPickerDialog(
                               initialDuration: Duration(seconds: 0),
-                              title: Text('Countdown before starting workout'),
+                              title: Text('Excercise time per repetition'),
                             );
                           },
-                        );
+                        ).then((exerciseTime) {
+                          if (exerciseTime == null) return;
+                          //_tabata.exerciseTime = exerciseTime;
+                        });
                       },
                     ),
                     Text("Break Duration"),
