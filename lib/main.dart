@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'bloc/timer_bloc.dart';
 import 'color_schemes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
@@ -17,13 +20,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Interval Timer',
-      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      themeMode: ThemeMode.dark,
-      home: const MyHomePage(title: 'Interval Timer'),
-      debugShowCheckedModeBanner: false,
+    return BlocProvider(
+      create: (context) => TimerBloc(),
+      child: MaterialApp(
+        title: 'Interval Timer',
+        theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+        themeMode: ThemeMode.dark,
+        home: const MyHomePage(title: 'Interval Timer'),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
