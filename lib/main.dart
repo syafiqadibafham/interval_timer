@@ -141,7 +141,42 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                     Text("Break Duration"),
-                    buildButtons(),
+                    ListTile(
+                      title: Text('Break Time'),
+                      subtitle: Text(
+                          training.breakDuration.toString().substring(0, 7)),
+                      leading: Icon(Icons.pause),
+                      onTap: () {
+                        showDialog<Duration>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DurationPickerDialog(
+                              initialDuration: Duration(seconds: 0),
+                              title: Text('Break time per repetition'),
+                            );
+                          },
+                        ).then((breakTime) {
+                          if (breakTime == null) return;
+                          setState(() {
+                            training.breakDuration = breakTime;
+                          });
+                        });
+                      },
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => timerPage(
+                                  training: training,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text("Start Training")),
+                    ),
                   ],
                 ),
               ),
@@ -151,22 +186,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-
-  Widget buildButtons() {
-    //var isRunning = timer == null ? false : timer!.isActive;
-
-    return ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => timerPage(
-                training: training,
-              ),
-            ),
-          );
-        },
-        child: Text("Start Training"));
   }
 }

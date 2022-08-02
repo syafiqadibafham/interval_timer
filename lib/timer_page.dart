@@ -57,7 +57,7 @@ class _timerPageState extends State<timerPage> {
               'Round : $interval',
             ),
             Text(
-              training.trainingDuration.toString(),
+              training.breakDuration.toString(),
             ),
             SlideCountdown(
               duration: training.trainingDuration,
