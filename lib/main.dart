@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Training Intervals"),
+                    const Text("Set your Training"),
                     TouchSpin(
                       min: 1,
                       max: 100,
@@ -116,7 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         log("Intervals : " + training.interval.toString());
                       },
                     ),
-                    Text("Training Duration"),
                     ListTile(
                       title: Text('Exercise Time'),
                       subtitle: Text(
@@ -140,7 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                     ),
-                    Text("Break Duration"),
                     ListTile(
                       title: Text('Break Time'),
                       subtitle: Text(
@@ -164,18 +162,46 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                     Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => timerPage(
-                                  training: training,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text("Start Training")),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => timerPage(
+                                      training: training,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text("Start Training")),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => timerPage(
+                                      training: training,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Reset",
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error),
+                              )),
+                        ],
+                      ),
                     ),
                   ],
                 ),
