@@ -11,18 +11,27 @@ part 'timer_state.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   final Ticker _ticker;
-  final int _duration;
+  final int _trainingDuration;
+  final int _breakDuration;
+  final int _interval;
 
   StreamSubscription<int>? _tickerSubscription;
 
-  TimerBloc({required Ticker ticker, required int duration})
+  TimerBloc(
+      {required Ticker ticker,
+      required int interval,
+      required int trainingDuration,
+      required int breakDuration})
       : _ticker = ticker,
-        _duration = duration,
-        super(TimerInitial(duration)) {
+        _interval = interval,
+        _trainingDuration = trainingDuration,
+        _breakDuration = breakDuration,
+        super(TimerInitial(trainingDuration)) {
     on<TimerStarted>(_onStarted);
     on<TimerTicked>(_onTicked);
     on<TimerPaused>(_onPaused);
     on<TimerResumed>(_onResumed);
+    on<TimerBreak>(_onBreak);
     on<TimerReset>(_onReset);
   }
   @override
@@ -40,29 +49,43 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   void _onTicked(TimerTicked event, Emitter<TimerState> emit) {
-    emit(
-      event.duration > 0
-          ? TimerRunInProgress(event.duration)
-          : const TimerRunComplete(),
-    );
+    _interval > 0
+        ? emit(
+            event.duration > 0
+                ? TimerRunInProgress(event.duration)
+                : TimerRest(state.trainingDuration),
+          )
+        : emit(
+            event.duration > 0
+                ? TimerRunInProgress(event.duration)
+                : const TimerRunComplete(),
+          );
   }
 
   void _onPaused(TimerPaused event, Emitter<TimerState> emit) {
     if (state is TimerRunInProgress) {
       _tickerSubscription?.pause();
-      emit(TimerRunPause(state.duration));
+      emit(TimerRunPause(state.trainingDuration));
     }
   }
 
   void _onResumed(TimerResumed resume, Emitter<TimerState> emit) {
     if (state is TimerRunPause) {
       _tickerSubscription?.resume();
-      emit(TimerRunInProgress(state.duration));
+      emit(TimerRunInProgress(state.trainingDuration));
     }
+  }
+
+  void _onBreak(TimerBreak event, Emitter<TimerState> emit) {
+    emit(TimerRunInProgress(event.duration));
+    //_tickerSubscription?.cancel();
+    _tickerSubscription = _ticker
+        .tick(ticks: _breakDuration)
+        .listen((duration) => add(TimerTicked(duration: _breakDuration)));
   }
 
   void _onReset(TimerReset event, Emitter<TimerState> emit) {
     _tickerSubscription?.cancel();
-    emit(TimerInitial(_duration));
+    emit(TimerInitial(_trainingDuration));
   }
 }

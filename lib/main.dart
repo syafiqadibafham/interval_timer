@@ -154,11 +154,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BlocProvider(
-                                      create: (context) => TimerBloc(
-                                          ticker: Ticker(),
-                                          duration: training
-                                              .trainingDuration.inSeconds),
+                                    builder: (context) =>
+                                        BlocProvider<TimerBloc>(
+                                      create: (context) {
+                                        return TimerBloc(
+                                            ticker: Ticker(),
+                                            trainingDuration: training
+                                                .trainingDuration.inSeconds,
+                                            breakDuration: training
+                                                .breakDuration.inSeconds,
+                                            interval: training.interval);
+                                      },
                                       child: timerPage(
                                         training: training,
                                       ),

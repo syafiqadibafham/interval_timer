@@ -20,6 +20,11 @@ class TimerResumed extends TimerEvent {
   const TimerResumed();
 }
 
+class TimerBreak extends TimerEvent {
+  const TimerBreak({required this.duration});
+  final int duration;
+}
+
 class TimerReset extends TimerEvent {
   const TimerReset();
 }
