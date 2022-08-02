@@ -1,13 +1,11 @@
-import 'dart:html';
-
 import 'package:equatable/equatable.dart';
 
 class Training extends Equatable {
-  final int interval;
-  final Duration trainingDuration;
-  final Duration breakDuration;
+  int interval;
+  Duration trainingDuration;
+  Duration breakDuration;
 
-  const Training({
+  Training({
     required this.interval,
     required this.trainingDuration,
     required this.breakDuration,
@@ -15,6 +13,10 @@ class Training extends Equatable {
 
   @override
   List<Object?> get props => [interval, trainingDuration, breakDuration];
+
+  Duration getTotalTime() {
+    return (trainingDuration * interval) + (breakDuration * interval);
+  }
 
   static List<Training> training = [
     Training(

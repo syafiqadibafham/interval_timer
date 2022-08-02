@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'package:interval_timer/model/training_model.dart';
+import 'package:interval_timer/timer_page.dart';
 import 'bloc/timer_bloc.dart';
 import 'color_schemes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
-
 import 'widgets/durationPicker.dart';
+import 'model/training_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
         darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
         themeMode: ThemeMode.dark,
-        home: const MyHomePage(title: 'Interval Timer'),
+        home: MyHomePage(title: 'Interval Timer'),
         debugShowCheckedModeBanner: false,
       ),
     );
@@ -44,28 +45,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  int _interval = 0;
+  Training training = Training(
+      interval: 1,
+      trainingDuration: Duration(seconds: 0),
+      breakDuration: Duration(seconds: 0));
+  Timer? timer;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      int seconds = training.trainingDuration.inSeconds;
+      if (seconds > 0) {
+        setState(() {
+          seconds--;
+        });
+      } else {
+        stopTimer();
+      }
     });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    int _interval = training.interval;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -80,20 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Round : $_interval',
-            ),
-            SlideCountdown(
-              duration: Duration(seconds: 100),
-              showZeroValue: true,
-              withDays: false,
-              textStyle: TextStyle(
-                  fontSize: 50, color: Theme.of(context).colorScheme.primary),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.transparent,
-              ),
-            ),
             Container(
               width: 400,
               height: 400,
@@ -104,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Training Intervals"),
+                    const Text("Training Intervals"),
                     TouchSpin(
                       min: 1,
                       max: 100,
@@ -119,15 +111,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       iconPadding: const EdgeInsets.all(20),
                       onChanged: (val) {
                         setState(() {
-                          _interval = val.toInt();
+                          training.interval = val.toInt();
                         });
-                        log("Interval : $val");
+                        log("Intervals : " + training.interval.toString());
                       },
                     ),
                     Text("Training Duration"),
                     ListTile(
                       title: Text('Exercise Time'),
-                      subtitle: Text(Duration(minutes: 1).toString()),
+                      subtitle: Text(
+                          training.trainingDuration.toString().substring(0, 7)),
                       leading: Icon(Icons.timer),
                       onTap: () {
                         showDialog<Duration>(
@@ -140,11 +133,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                         ).then((exerciseTime) {
                           if (exerciseTime == null) return;
-                          //_tabata.exerciseTime = exerciseTime;
+                          setState(() {
+                            log(exerciseTime.toString());
+                            training.trainingDuration = exerciseTime;
+                          });
                         });
                       },
                     ),
                     Text("Break Duration"),
+                    buildButtons(),
                   ],
                 ),
               ),
@@ -152,11 +149,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Start Timer',
-        child: const Icon(Icons.play_arrow_rounded),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget buildButtons() {
+    //var isRunning = timer == null ? false : timer!.isActive;
+
+    return ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => timerPage(
+                training: training,
+              ),
+            ),
+          );
+        },
+        child: Text("Start Training"));
   }
 }

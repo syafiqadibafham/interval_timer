@@ -50,8 +50,8 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
           },
         ),
         Text(
-          ':',
-          style: TextStyle(fontSize: 30),
+          'm :',
+          style: TextStyle(fontSize: 20),
         ),
         NumberPicker(
           itemWidth: 65,
@@ -64,6 +64,10 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
               seconds = value;
             });
           },
+        ),
+        Text(
+          's',
+          style: TextStyle(fontSize: 20),
         ),
       ]),
       actions: [
