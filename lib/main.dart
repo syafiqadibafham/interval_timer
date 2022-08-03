@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       themeMode: ThemeMode.system,
-      home: MyHomePage(title: 'Interval Timer'),
+      home: const MyHomePage(title: 'Interval Timer'),
       debugShowCheckedModeBanner: false,
     );
   }
