@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.interval_timer">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="interval_timer"
         android:name="${applicationName}"
