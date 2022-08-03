@@ -1,16 +1,20 @@
-# interval_timer
+# Workout Timer with interval
 
-A new Flutter project.
+A basic Timer App project with Material 3 color created using Futter Framework.
 
-## Getting Started
+## Features
+### Basic Timer App
+### Dark and Light Theme
 
-This project is a starting point for a Flutter application.
+## Screenshots
+| Workout settings | Excercise period | Rest period |
+| ---------------- | ---------------- | ----------- |
+| ![](screenshots/tabata_config.png) | ![](screenshots/workout_exercise.png) | ![](screenshots/workout_rest.png)
 
-A few resources to get you started if this is your first Flutter project:
+| App settings | Light mode theme selection |
+| ------------ | -------------------------- |
+| ![](screenshots/settings.png) | ![](screenshots/light_theme.png) |
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Night mode | Night mode workout |
+| ---------- | ------------------ |
+| ![](screenshots/tabata_config_night.png) | ![](screenshots/workout_night.png) |
