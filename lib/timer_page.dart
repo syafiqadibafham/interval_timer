@@ -5,8 +5,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval_timer/bloc/timer_bloc.dart';
 import 'package:interval_timer/model/ticker.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'model/training_model.dart';
+
+String stepName(WorkoutState step) {
+  switch (step) {
+    case WorkoutState.exercising:
+      return 'Exercise';
+    case WorkoutState.resting:
+      return 'Rest';
+    case WorkoutState.breaking:
+      return 'Break';
+    case WorkoutState.finished:
+      return 'Finished';
+    case WorkoutState.starting:
+      return 'Starting';
+    default:
+      return '';
+  }
+}
 
 class timerPage extends StatefulWidget {
   final Training training;
@@ -18,11 +36,13 @@ class timerPage extends StatefulWidget {
 }
 
 class _timerPageState extends State<timerPage> {
+  late Workout _workout;
+
   @override
-  void setState(VoidCallback fn) {
-    // TODO: implement setState
-    super.setState(fn);
-    final training = widget.training;
+  void initState() {
+    super.initState();
+    _workout = Workout(widget.training, _onWorkoutChanged);
+    _start();
   }
 
   void startTimer() {
@@ -30,13 +50,51 @@ class _timerPageState extends State<timerPage> {
   }
 
   @override
+  dispose() {
+    _workout.dispose();
+    Wakelock.disable();
+    super.dispose();
+  }
+
+  _onWorkoutChanged() {
+    if (_workout.step == WorkoutState.finished) {
+      Wakelock.disable();
+    }
+    this.setState(() {});
+  }
+
+  _getBackgroundColor(ThemeData theme) {
+    switch (_workout.step) {
+      case WorkoutState.exercising:
+        return Theme.of(context).colorScheme.background;
+      case WorkoutState.starting:
+      case WorkoutState.resting:
+        return Theme.of(context).colorScheme.onPrimary;
+      case WorkoutState.breaking:
+        return Theme.of(context).colorScheme.onErrorContainer;
+      default:
+        return Theme.of(context).colorScheme.background;
+    }
+  }
+
+  _pause() {
+    _workout.pause();
+    Wakelock.disable();
+  }
+
+  _start() {
+    _workout.start();
+    Wakelock.enable();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Training training = widget.training;
-    Duration? currentTimer;
     int interval = training.interval;
+    var theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: _getBackgroundColor(theme),
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -50,30 +108,27 @@ class _timerPageState extends State<timerPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Round : $interval',
+              'Round : ${_workout.set}',
             ),
             Text(
               training.breakDuration.toString(),
             ),
             TimerText(),
             Actions(trainingDuration: widget.training.trainingDuration),
+            Expanded(child: _buildButtonBar()),
           ],
         ),
       ),
     );
   }
-}
 
-class TimerText extends StatelessWidget {
-  const TimerText({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final duration =
-        context.select((TimerBloc bloc) => bloc.state.trainingDuration);
-    final minutesStr =
-        ((duration / 60) % 60).floor().toString().padLeft(2, '0');
-    final secondsStr = (duration % 60).toString().padLeft(2, '0');
+  Widget TimerText() {
+    final duration = _workout.totalTime;
+    String minutesStr = (duration.inMinutes).toString().padLeft(2, '0');
+    String secondsStr = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    // final minutesStr =
+    //     ((duration / 60) % 60).floor().toString().padLeft(2, '0');
+    // final secondsStr = (duration % 60).toString().padLeft(2, '0');
 
     return Column(
       children: [
@@ -87,7 +142,46 @@ class TimerText extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildButtonBar() {
+    if (_workout.step == WorkoutState.finished) {
+      return Container();
+    }
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: TextButton(
+        onPressed: _workout.isActive ? _pause : _start,
+        child: Icon(_workout.isActive ? Icons.pause : Icons.play_arrow),
+      ),
+    );
+  }
 }
+
+// class TimerText extends StatelessWidget {
+//   const TimerText({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // final duration =
+//     //     context.select((TimerBloc bloc) => bloc.state.trainingDuration);
+//     final duration = _workout.
+//     final minutesStr =
+//         ((duration / 60) % 60).floor().toString().padLeft(2, '0');
+//     final secondsStr = (duration % 60).toString().padLeft(2, '0');
+
+//     return Column(
+//       children: [
+//         Text(
+//           '$minutesStr:$secondsStr',
+//           style: TextStyle(
+//               fontSize: 70,
+//               fontWeight: FontWeight.bold,
+//               color: Theme.of(context).colorScheme.primary),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class Actions extends StatelessWidget {
   final trainingDuration;
