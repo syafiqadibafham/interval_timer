@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_touch_spin: ^2.0.0
+  google_fonts: ^3.0.1
   http: ^0.13.4
   numberpicker: ^2.1.1
   slide_countdown: ^0.2.9

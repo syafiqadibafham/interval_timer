@@ -6,8 +6,8 @@ import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/quotes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:wakelock/wakelock.dart';
-
-import 'model/training_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../model/training_model.dart';
 
 String stepName(WorkoutState step) {
   switch (step) {
@@ -123,43 +123,51 @@ class _TimerPageState extends State<TimerPage> {
         title: Text("Timer"),
         backgroundColor: Colors.transparent,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: Text(
                 'Round : ${_workout.set}',
-                style: TextStyle(fontSize: 30),
+                style: const TextStyle(fontSize: 30),
               ),
-              TimerText(),
-              //Actions(trainingDuration: widget.training.trainingDuration),
-              //if()
-              FutureBuilder(
-                  future: futureQuote,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        snapshot.data.toString(),
-                      );
-                    } else {
-                      return Text(
-                        "No Quotes",
-                      );
-                    }
-                  }),
-              Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: _buildButtonBar())),
-              SizedBox(
-                height: 35,
-              )
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 85,
+            ),
+            Expanded(flex: 1, child: Center(child: TimerText())),
+            //Actions(trainingDuration: widget.training.trainingDuration),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: FittedBox(
+                child: FutureBuilder(
+                    future: futureQuote,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return _workout.step == WorkoutState.resting
+                            ? Text("Rest",
+                                style: GoogleFonts.nunitoSans(
+                                    fontSize: 30, fontWeight: FontWeight.bold))
+                            : Text(snapshot.data.toString(),
+                                style: GoogleFonts.caveat(
+                                    fontSize: 30, fontWeight: FontWeight.bold));
+                      } else {
+                        return Text(
+                          "No Quotes",
+                        );
+                      }
+                    }),
+              ),
+            ),
+            Flexible(
+                flex: 1,
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _buildButtonBar())),
+          ],
         ),
       ),
     );
@@ -170,9 +178,6 @@ class _TimerPageState extends State<TimerPage> {
     final duration = _workout.timeLeft;
     String minutesStr = (duration.inMinutes).toString().padLeft(2, '0');
     String secondsStr = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    // final minutesStr =
-    //     ((duration / 60) % 60).floor().toString().padLeft(2, '0');
-    // final secondsStr = (duration % 60).toString().padLeft(2, '0');
 
     return Column(
       children: [
@@ -197,17 +202,20 @@ class _TimerPageState extends State<TimerPage> {
             height: 70,
             width: 130,
             child: ElevatedButton(
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
               onPressed: _restart,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.replay_rounded),
+                  Icon(Icons.replay_rounded,
+                      color: Theme.of(context).colorScheme.onPrimary),
                   Text(
                     "Restart",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ],
               ),
