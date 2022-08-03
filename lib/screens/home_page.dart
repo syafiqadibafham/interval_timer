@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:interval_timer/main.dart';
 import 'package:interval_timer/screens/timer_page.dart';
 
 import '../bloc/timer_bloc.dart';
@@ -45,15 +46,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(
+            const Expanded(
               child: Center(
-                child: const Text(
+                child: Text(
                   "Set your Training",
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
-            Text("No. of Training intervals:"),
+            const Text("No. of Training intervals:"),
             TouchSpin(
               min: 1,
               max: 100,

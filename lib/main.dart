@@ -17,9 +17,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'Interval Timer',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       home: MyHomePage(title: 'Interval Timer'),
       debugShowCheckedModeBanner: false,
     );

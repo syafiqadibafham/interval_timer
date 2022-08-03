@@ -72,7 +72,7 @@ class _TimerPageState extends State<TimerPage> {
         return Theme.of(context).colorScheme.background;
       case WorkoutState.starting:
       case WorkoutState.resting:
-        return Theme.of(context).colorScheme.onPrimary;
+        return Theme.of(context).colorScheme.inversePrimary;
       case WorkoutState.breaking:
         return Theme.of(context).colorScheme.onPrimaryContainer;
       default:
