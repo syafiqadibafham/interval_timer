@@ -14,8 +14,8 @@ class DurationPickerDialog extends StatefulWidget {
     this.titlePadding,
     Widget? confirmWidget,
     Widget? cancelWidget,
-  })  : confirmWidget = confirmWidget ?? Text('OK'),
-        cancelWidget = cancelWidget ?? Text('CANCEL');
+  })  : confirmWidget = confirmWidget ?? const Text('OK'),
+        cancelWidget = cancelWidget ?? const Text('Cancel');
 
   @override
   State<StatefulWidget> createState() =>
@@ -48,8 +48,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
               minutes = value;
             });
           },
+          selectedTextStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 35,
+              fontWeight: FontWeight.bold),
         ),
-        Text(
+        const Text(
           'm :',
           style: TextStyle(fontSize: 20),
         ),
@@ -64,8 +68,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
               seconds = value;
             });
           },
+          selectedTextStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 35,
+              fontWeight: FontWeight.bold),
         ),
-        Text(
+        const Text(
           's',
           style: TextStyle(fontSize: 20),
         ),

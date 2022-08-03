@@ -173,6 +173,7 @@ class _TimerPageState extends State<TimerPage> {
     );
   }
 
+  //Timer Clock
   Widget TimerText() {
     var theme = Theme.of(context);
     final duration = _workout.timeLeft;
@@ -192,6 +193,7 @@ class _TimerPageState extends State<TimerPage> {
     );
   }
 
+  //Button for Pause,Resume,Stop and restart training
   Widget _buildButtonBar() {
     if (_workout.step == WorkoutState.finished) {
       return Row(

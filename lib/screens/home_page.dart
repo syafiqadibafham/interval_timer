@@ -85,8 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         context: context,
                         builder: (BuildContext context) {
                           return DurationPickerDialog(
-                            initialDuration: Duration(seconds: 0),
-                            title: Text('Excercise time per repetition'),
+                            initialDuration: Duration(
+                                seconds: training.trainingDuration.inSeconds),
+                            title: const Text('Excercise time per intervals'),
                           );
                         },
                       ).then((exerciseTime) {
@@ -102,11 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: BoxDecoration(
                           color:
                               Theme.of(context).colorScheme.secondaryContainer,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Exercise Duration"),
+                          const Text("Exercise Duration"),
                           Text(
                             training.trainingDuration
                                 .toString()
@@ -128,8 +130,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         context: context,
                         builder: (BuildContext context) {
                           return DurationPickerDialog(
-                            initialDuration: Duration(seconds: 0),
-                            title: Text('Excercise time per repetition'),
+                            initialDuration: Duration(
+                                seconds: training.breakDuration.inSeconds),
+                            title: const Text('Break time per intervals'),
                           );
                         },
                       ).then((breakTime) {
