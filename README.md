@@ -1,6 +1,10 @@
-# interval_timer
+# Workout Timer with interval
 
-A new Flutter project.
+A basic Timer App project with Material 3 color created using Futter Framework.
+
+## Features
+### Basic Timer App
+### Dark and Light Theme
 
 ## Getting Started
 
