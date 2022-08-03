@@ -2,19 +2,28 @@
 
 A basic Timer App project with Material 3 color created using Futter Framework.
 
-## Features
-### Basic Timer App
-### Dark and Light Theme
-
 ## Screenshots
-| Workout settings | Excercise period | Rest period |
-| ---------------- | ---------------- | ----------- |
-| ![](screenshots/tabata_config.png) | ![](screenshots/workout_exercise.png) | ![](screenshots/workout_rest.png)
+### Home Page
+| Light Mode | Dark Mode |
+| ---------------- | ---------------- |
+| ![](screenshots/home_page_light.png) | ![](screenshots/home_page_dark.png) |
 
-| App settings | Light mode theme selection |
-| ------------ | -------------------------- |
-| ![](screenshots/settings.png) | ![](screenshots/light_theme.png) |
+## Duration Picker
+| Light Mode | Dark Mode |
+| ---------------- | ---------------- |
+| ![](screenshots/time_picker_light.png) | ![](screenshots/time_picker_dark.png) |
 
-| Night mode | Night mode workout |
-| ---------- | ------------------ |
-| ![](screenshots/tabata_config_night.png) | ![](screenshots/workout_night.png) |
+## Timer Page
+| Light Mode | Dark Mode |
+| ---------------- | ---------------- |
+| ![](screenshots/timer_page_light.png) | ![](screenshots/timer_page_dark.png) |
+
+## Rest View
+| Light Mode | Dark Mode |
+| ---------------- | ---------------- |
+| ![](screenshots/rest_page_light.png) | ![](screenshots/rest_page_dark.png) |
+
+## Finish View
+| Light Mode | Dark Mode |
+| ---------------- | ---------------- |
+| ![](screenshots/finish_page_light.png) | ![](screenshots/finish_page_dark.png) |
