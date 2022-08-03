@@ -64,7 +64,7 @@ class _TimerPageState extends State<TimerPage> {
     this.setState(() {});
   }
 
-  String stepName() {
+  String _stateName() {
     switch (_workout.step) {
       case WorkoutState.exercising:
         return quoteStr;
@@ -150,7 +150,7 @@ class _TimerPageState extends State<TimerPage> {
                 height: 85,
               ),
               Expanded(flex: 1, child: Center(child: TimerText())),
-              Text(stepName(),
+              Text(_stateName(),
                   style: GoogleFonts.caveat(
                       fontSize: 30, fontWeight: FontWeight.bold)),
               Flexible(
