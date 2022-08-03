@@ -6,23 +6,6 @@ import 'package:wakelock/wakelock.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../model/training_model.dart';
 
-String stepName(WorkoutState step) {
-  switch (step) {
-    case WorkoutState.exercising:
-      return 'Exercise';
-    case WorkoutState.resting:
-      return 'Rest';
-    case WorkoutState.breaking:
-      return 'Break';
-    case WorkoutState.finished:
-      return 'Finished';
-    case WorkoutState.starting:
-      return 'Starting';
-    default:
-      return '';
-  }
-}
-
 class TimerPage extends StatefulWidget {
   final Training training;
 
@@ -38,15 +21,26 @@ class _TimerPageState extends State<TimerPage> {
   bool isFinish = false;
   final confettiController = ConfettiController();
 
+  String quoteStr = "Exercise";
+
   @override
   void initState() {
     super.initState();
     _workout = Workout(widget.training, _onWorkoutChanged);
     _start();
     futureQuote = getQuote();
+    fetchQuote();
     confettiController.addListener(() {
       setState(() {
         isFinish = confettiController.state == ConfettiControllerState.playing;
+      });
+    });
+  }
+
+  void fetchQuote() {
+    getQuote().then((quote) {
+      setState(() {
+        quoteStr = quote; // Future is completed with a value.
       });
     });
   }
@@ -70,6 +64,21 @@ class _TimerPageState extends State<TimerPage> {
     this.setState(() {});
   }
 
+  String stepName() {
+    switch (_workout.step) {
+      case WorkoutState.exercising:
+        return quoteStr;
+      case WorkoutState.resting:
+        return 'Rest';
+      case WorkoutState.finished:
+        return 'Finished';
+      case WorkoutState.starting:
+        return 'Starting';
+      default:
+        return '';
+    }
+  }
+
   _getBackgroundColor(ThemeData theme) {
     switch (_workout.step) {
       case WorkoutState.exercising:
@@ -77,8 +86,6 @@ class _TimerPageState extends State<TimerPage> {
       case WorkoutState.starting:
       case WorkoutState.resting:
         return Theme.of(context).colorScheme.inversePrimary;
-      case WorkoutState.breaking:
-        return Theme.of(context).colorScheme.onPrimaryContainer;
       default:
         return Theme.of(context).colorScheme.background;
     }
@@ -91,8 +98,6 @@ class _TimerPageState extends State<TimerPage> {
       case WorkoutState.starting:
       case WorkoutState.resting:
         return Theme.of(context).colorScheme.onPrimaryContainer;
-      case WorkoutState.breaking:
-        return Theme.of(context).colorScheme.onPrimary;
       default:
         return Theme.of(context).colorScheme.primary;
     }
@@ -145,28 +150,9 @@ class _TimerPageState extends State<TimerPage> {
                 height: 85,
               ),
               Expanded(flex: 1, child: Center(child: TimerText())),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: FittedBox(
-                  child: FutureBuilder(
-                      future: futureQuote,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return _workout.step == WorkoutState.resting
-                              ? Text("Rest",
-                                  style: GoogleFonts.nunitoSans(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold))
-                              : Text(snapshot.data.toString(),
-                                  style: GoogleFonts.caveat(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold));
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      }),
-                ),
-              ),
+              Text(stepName(),
+                  style: GoogleFonts.caveat(
+                      fontSize: 30, fontWeight: FontWeight.bold)),
               Flexible(
                   flex: 1,
                   child: Align(
