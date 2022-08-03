@@ -123,26 +123,29 @@ class _timerPageState extends State<timerPage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Round : ${_workout.set}',
-              style: TextStyle(fontSize: 30),
-            ),
-            Text(
-              training.breakDuration.toString(),
-            ),
-            TimerText(),
-            //Actions(trainingDuration: widget.training.trainingDuration),
-            Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _buildButtonBar())),
-            SizedBox(
-              height: 35,
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Round : ${_workout.set}',
+                style: TextStyle(fontSize: 30),
+              ),
+              Text(
+                training.breakDuration.toString(),
+              ),
+              TimerText(),
+              //Actions(trainingDuration: widget.training.trainingDuration),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _buildButtonBar())),
+              SizedBox(
+                height: 35,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -176,18 +179,24 @@ class _timerPageState extends State<timerPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-            style: ButtonStyle(),
-            onPressed: _restart,
-            child: Row(
-              children: [
-                Icon(Icons.replay_rounded),
-                Text(
-                  "Restart",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.primary),
-                ),
-              ],
+          SizedBox(
+            height: 70,
+            width: 130,
+            child: ElevatedButton(
+              style: ButtonStyle(),
+              onPressed: _restart,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.replay_rounded),
+                  Text(
+                    "Restart",
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -197,49 +206,64 @@ class _timerPageState extends State<timerPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
+        SizedBox(
+          height: 70,
+          width: 130,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
               primary: _workout.isActive
                   ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.onPrimaryContainer),
-          onPressed: _workout.isActive ? _pause : _start,
-          child: Row(
-            children: [
-              _workout.isActive
-                  ? Icon(
-                      Icons.pause_rounded,
-                      color: Theme.of(context).colorScheme.primary,
-                    )
-                  : Icon(Icons.play_arrow_rounded,
-                      color: Theme.of(context).colorScheme.onPrimary),
-              Text(
-                _workout.isActive ? "Pause" : "Resume",
-                style: TextStyle(
+                  : Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+            onPressed: _workout.isActive ? _pause : _start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _workout.isActive
+                    ? Icon(
+                        Icons.pause_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
+                    : Icon(Icons.play_arrow_rounded,
+                        color: Theme.of(context).colorScheme.onPrimary),
+                Text(
+                  _workout.isActive ? "Pause" : "Resume",
+                  style: TextStyle(
                     color: _workout.isActive
                         ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onPrimary),
-              ),
-            ],
+                        : Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
           width: 15,
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).colorScheme.onErrorContainer),
-          onPressed: _stop,
-          child: Row(
-            children: [
-              Icon(
-                Icons.stop_rounded,
-                color: Theme.of(context).colorScheme.onError,
-              ),
-              Text(
-                "Stop",
-                style: TextStyle(color: Theme.of(context).colorScheme.onError),
-              ),
-            ],
+        SizedBox(
+          height: 70,
+          width: 130,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).colorScheme.onErrorContainer),
+            onPressed: _stop,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.stop_rounded,
+                  color: Theme.of(context).colorScheme.onError,
+                ),
+                Text(
+                  "Stop",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onError),
+                ),
+              ],
+            ),
           ),
         ),
       ],
