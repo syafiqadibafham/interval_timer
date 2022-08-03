@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
 import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/model/training_model.dart';
 import 'package:interval_timer/screens/timer_page.dart';
-import 'bloc/timer_bloc.dart';
 import 'color_schemes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'screens/home_page.dart';
@@ -17,14 +15,9 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

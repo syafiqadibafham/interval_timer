@@ -1,14 +1,10 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:interval_timer/main.dart';
 import 'package:interval_timer/screens/timer_page.dart';
-
-import '../bloc/timer_bloc.dart';
 import '../model/ticker.dart';
 import '../model/training_model.dart';
 import '../widgets/durationPicker.dart';
@@ -187,19 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BlocProvider<TimerBloc>(
-                                    create: (context) {
-                                      return TimerBloc(
-                                          ticker: const Ticker(),
-                                          trainingDuration: training
-                                              .trainingDuration.inSeconds,
-                                          breakDuration:
-                                              training.breakDuration.inSeconds,
-                                          interval: training.interval);
-                                    },
-                                    child: TimerPage(
-                                      training: training,
-                                    ),
+                                  builder: (context) => TimerPage(
+                                    training: training,
                                   ),
                                 ),
                               );
