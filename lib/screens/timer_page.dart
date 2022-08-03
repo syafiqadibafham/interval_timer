@@ -155,9 +155,7 @@ class _TimerPageState extends State<TimerPage> {
                                 style: GoogleFonts.caveat(
                                     fontSize: 30, fontWeight: FontWeight.bold));
                       } else {
-                        return Text(
-                          "No Quotes",
-                        );
+                        return const CircularProgressIndicator();
                       }
                     }),
               ),
