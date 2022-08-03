@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:interval_timer/main.dart';
 import 'package:interval_timer/screens/timer_page.dart';
@@ -180,14 +181,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                     .colorScheme
                                     .primaryContainer),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TimerPage(
-                                    training: training,
+                              if (training.trainingDuration.inSeconds != 0) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TimerPage(
+                                      training: training,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                var snackBar = SnackBar(
+                                    content: Text(
+                                        'Please insert Training Duration more than 0s'));
+                                // Step 3
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                             },
                             child: Text(
                               "Start Training",

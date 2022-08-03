@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/quotes.dart';
@@ -36,6 +37,8 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
   late Workout _workout;
   late Future futureQuote;
+  bool isFinish = false;
+  final confettiController = ConfettiController();
 
   @override
   void initState() {
@@ -43,6 +46,11 @@ class _TimerPageState extends State<TimerPage> {
     _workout = Workout(widget.training, _onWorkoutChanged);
     _start();
     futureQuote = getQuote();
+    confettiController.addListener(() {
+      setState(() {
+        isFinish = confettiController.state == ConfettiControllerState.playing;
+      });
+    });
   }
 
   _restart() {
@@ -113,60 +121,68 @@ class _TimerPageState extends State<TimerPage> {
     int interval = training.interval;
     var theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: _getBackgroundColor(theme),
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("Timer"),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
-              flex: 1,
-              child: Text(
-                'Round : ${_workout.set}',
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-              ),
-            ),
-            const SizedBox(
-              height: 85,
-            ),
-            Expanded(flex: 1, child: Center(child: TimerText())),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: FittedBox(
-                child: FutureBuilder(
-                    future: futureQuote,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return _workout.step == WorkoutState.resting
-                            ? Text("Rest",
-                                style: GoogleFonts.nunitoSans(
-                                    fontSize: 30, fontWeight: FontWeight.bold))
-                            : Text(snapshot.data.toString(),
-                                style: GoogleFonts.caveat(
-                                    fontSize: 30, fontWeight: FontWeight.bold));
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    }),
-              ),
-            ),
-            Flexible(
+    return Stack(children: [
+      Scaffold(
+        backgroundColor: _getBackgroundColor(theme),
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text("Timer"),
+          backgroundColor: Colors.transparent,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
                 flex: 1,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _buildButtonBar())),
-          ],
+                child: Text(
+                  'Round : ${_workout.set}',
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(
+                height: 85,
+              ),
+              Expanded(flex: 1, child: Center(child: TimerText())),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: FittedBox(
+                  child: FutureBuilder(
+                      future: futureQuote,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return _workout.step == WorkoutState.resting
+                              ? Text("Rest",
+                                  style: GoogleFonts.nunitoSans(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold))
+                              : Text(snapshot.data.toString(),
+                                  style: GoogleFonts.caveat(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                ),
+              ),
+              Flexible(
+                  flex: 1,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _buildButtonBar())),
+            ],
+          ),
         ),
       ),
-    );
+      ConfettiWidget(
+        confettiController: confettiController,
+        shouldLoop: true,
+      ),
+    ]);
   }
 
   //Timer Clock
@@ -192,6 +208,8 @@ class _TimerPageState extends State<TimerPage> {
   //Button for Pause,Resume,Stop and restart training
   Widget _buildButtonBar() {
     if (_workout.step == WorkoutState.finished) {
+      isFinish = true;
+      confettiController.play();
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
