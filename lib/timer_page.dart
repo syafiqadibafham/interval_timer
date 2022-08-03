@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval_timer/bloc/timer_bloc.dart';
 import 'package:interval_timer/model/ticker.dart';
+import 'package:interval_timer/quotes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -132,11 +133,22 @@ class _timerPageState extends State<timerPage> {
                 'Round : ${_workout.set}',
                 style: TextStyle(fontSize: 30),
               ),
-              Text(
-                training.breakDuration.toString(),
-              ),
               TimerText(),
               //Actions(trainingDuration: widget.training.trainingDuration),
+              //if()
+              FutureBuilder(
+                  future: getQuote(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        snapshot.data.toString(),
+                      );
+                    } else {
+                      return Text(
+                        "No Quotes",
+                      );
+                    }
+                  }),
               Expanded(
                   child: Align(
                       alignment: Alignment.bottomCenter,
