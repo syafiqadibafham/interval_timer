@@ -63,6 +63,14 @@ class Workout {
     _onStateChange();
   }
 
+  /// Stop the workout
+  stop() {
+    _timer?.cancel();
+    _step = WorkoutState.finished;
+    _timeLeft = Duration(seconds: 0);
+    _onStateChange();
+  }
+
   /// Stops the timer without triggering the state change callback.
   dispose() {
     _timer?.cancel();
@@ -92,12 +100,10 @@ class Workout {
       if (set == _config.interval) {
         _finish();
       } else {
-        _startBreak();
+        _startRest();
       }
-    } else if (_step == WorkoutState.resting) {
-      _startRest();
     } else if (_step == WorkoutState.starting ||
-        _step == WorkoutState.breaking) {
+        _step == WorkoutState.resting) {
       _startSet();
     }
   }
@@ -110,16 +116,6 @@ class Workout {
     }
     _timeLeft = _config.breakDuration;
     //_playSound(_settings.startRest);
-  }
-
-  _startBreak() {
-    _step = WorkoutState.breaking;
-    if (_config.breakDuration.inSeconds == 0) {
-      _nextStep();
-      return;
-    }
-    _timeLeft = _config.breakDuration;
-    //_playSound(_settings.startBreak);
   }
 
   _startSet() {

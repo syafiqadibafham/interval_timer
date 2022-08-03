@@ -97,7 +97,7 @@ class _timerPageState extends State<timerPage> {
   }
 
   _stop() {
-    _workout.dispose();
+    _workout.stop();
     Wakelock.disable();
   }
 
@@ -198,16 +198,26 @@ class _timerPageState extends State<timerPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ElevatedButton(
-          style: ButtonStyle(),
+          style: ElevatedButton.styleFrom(
+              primary: _workout.isActive
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.onPrimaryContainer),
           onPressed: _workout.isActive ? _pause : _start,
           child: Row(
             children: [
               _workout.isActive
-                  ? Icon(Icons.pause_rounded)
-                  : Icon(Icons.play_arrow_rounded),
+                  ? Icon(
+                      Icons.pause_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : Icon(Icons.play_arrow_rounded,
+                      color: Theme.of(context).colorScheme.onPrimary),
               Text(
                 _workout.isActive ? "Pause" : "Resume",
-                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                style: TextStyle(
+                    color: _workout.isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onPrimary),
               ),
             ],
           ),
