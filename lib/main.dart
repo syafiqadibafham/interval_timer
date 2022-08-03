@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 .breakDuration.inSeconds,
                                             interval: training.interval);
                                       },
-                                      child: timerPage(
+                                      child: TimerPage(
                                         training: training,
                                       ),
                                     ),

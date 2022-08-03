@@ -26,23 +26,25 @@ String stepName(WorkoutState step) {
   }
 }
 
-class timerPage extends StatefulWidget {
+class TimerPage extends StatefulWidget {
   final Training training;
 
-  timerPage({Key? key, required this.training}) : super(key: key);
+  TimerPage({Key? key, required this.training}) : super(key: key);
 
   @override
-  State<timerPage> createState() => _timerPageState();
+  State<TimerPage> createState() => _TimerPageState();
 }
 
-class _timerPageState extends State<timerPage> {
+class _TimerPageState extends State<TimerPage> {
   late Workout _workout;
+  late Future futureQuote;
 
   @override
   void initState() {
     super.initState();
     _workout = Workout(widget.training, _onWorkoutChanged);
     _start();
+    futureQuote = getQuote();
   }
 
   _restart() {
@@ -137,7 +139,7 @@ class _timerPageState extends State<timerPage> {
               //Actions(trainingDuration: widget.training.trainingDuration),
               //if()
               FutureBuilder(
-                  future: getQuote(),
+                  future: futureQuote,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Text(
@@ -165,7 +167,7 @@ class _timerPageState extends State<timerPage> {
 
   Widget TimerText() {
     var theme = Theme.of(context);
-    final duration = _workout.totalTime;
+    final duration = _workout.timeLeft;
     String minutesStr = (duration.inMinutes).toString().padLeft(2, '0');
     String secondsStr = (duration.inSeconds % 60).toString().padLeft(2, '0');
     // final minutesStr =

@@ -50,7 +50,6 @@ class Workout {
   start() {
     if (_step == WorkoutState.initial) {
       _step = WorkoutState.starting;
-
       _nextStep();
     }
     _timer = Timer.periodic(Duration(seconds: 1), _tick);
