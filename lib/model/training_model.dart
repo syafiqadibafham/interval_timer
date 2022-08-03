@@ -24,14 +24,13 @@ class Training extends Equatable {
 enum WorkoutState { initial, starting, exercising, resting, breaking, finished }
 
 class Workout {
-  Training _config;
+  Training _trainingData;
+  Timer? _timer;
 
   /// Callback for when the workout's state has changed.
   Function _onStateChange;
 
   WorkoutState _step = WorkoutState.initial;
-
-  Timer? _timer;
 
   /// Time left in the current step
   late Duration _timeLeft;
@@ -44,7 +43,7 @@ class Workout {
   /// Current rep
   int _rep = 0;
 
-  Workout(this._config, this._onStateChange);
+  Workout(this._trainingData, this._onStateChange);
 
   /// Starts or resumes the workout
   start() {
@@ -84,10 +83,6 @@ class Workout {
       _nextStep();
     } else {
       _timeLeft -= Duration(seconds: 1);
-      if (_timeLeft.inSeconds <= 3 && _timeLeft.inSeconds >= 1) {
-        //Show text
-        //_playSound(countdownPip);
-      }
     }
 
     _onStateChange();
@@ -96,7 +91,7 @@ class Workout {
   /// Moves the workout to the next step and sets up state for it.
   _nextStep() {
     if (_step == WorkoutState.exercising) {
-      if (set == _config.interval) {
+      if (set == _trainingData.interval) {
         _finish();
       } else {
         _startRest();
@@ -109,37 +104,30 @@ class Workout {
 
   _startRest() {
     _step = WorkoutState.resting;
-    if (_config.breakDuration.inSeconds == 0) {
+    if (_trainingData.breakDuration.inSeconds == 0) {
       _nextStep();
       return;
     }
-    _timeLeft = _config.breakDuration;
-    //_playSound(_settings.startRest);
+    _timeLeft = _trainingData.breakDuration;
+    //TODO play Rest Sound
   }
 
   _startSet() {
     _set++;
     _rep = 1;
     _step = WorkoutState.exercising;
-    _timeLeft = _config.trainingDuration;
-    //_playSound(_settings.startSet);
+    _timeLeft = _trainingData.trainingDuration;
+    //TODO play Start Sound
   }
 
   _finish() {
     _timer?.cancel();
     _step = WorkoutState.finished;
     _timeLeft = Duration(seconds: 0);
-    // _playSound(_settings.endWorkout).then((p) {
-    //   if (p == null) {
-    //     return;
-    //   }
-    //   p.onPlayerCompletion.first.then((_) {
-    //     _playSound(_settings.endWorkout);
-    //   });
-    // });
+    //TODO play Finish Sound
   }
 
-  get config => _config;
+  get config => _trainingData;
 
   get set => _set;
 

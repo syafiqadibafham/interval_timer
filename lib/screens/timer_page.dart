@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/quotes.dart';
-import 'package:slide_countdown/slide_countdown.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../model/training_model.dart';
@@ -127,7 +125,7 @@ class _TimerPageState extends State<TimerPage> {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text("Timer"),
+          title: const Text("Timer"),
           backgroundColor: Colors.transparent,
         ),
         body: Padding(
@@ -277,7 +275,7 @@ class _TimerPageState extends State<TimerPage> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 15,
         ),
         SizedBox(
