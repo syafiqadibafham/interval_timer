@@ -95,7 +95,7 @@ class Workout {
         _startBreak();
       }
     } else if (_step == WorkoutState.resting) {
-      _startRep();
+      _startRest();
     } else if (_step == WorkoutState.starting ||
         _step == WorkoutState.breaking) {
       _startSet();
@@ -110,13 +110,6 @@ class Workout {
     }
     _timeLeft = _config.breakDuration;
     //_playSound(_settings.startRest);
-  }
-
-  _startRep() {
-    _rep++;
-    _step = WorkoutState.exercising;
-    _timeLeft = _config.trainingDuration;
-    //_playSound(_settings.startRep);
   }
 
   _startBreak() {

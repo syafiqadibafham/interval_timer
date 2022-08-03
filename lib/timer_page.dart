@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval_timer/bloc/timer_bloc.dart';
@@ -45,8 +44,9 @@ class _timerPageState extends State<timerPage> {
     _start();
   }
 
-  void startTimer() {
-    setState(() {});
+  _restart() {
+    _workout = Workout(widget.training, _onWorkoutChanged);
+    _start();
   }
 
   @override
@@ -71,14 +71,33 @@ class _timerPageState extends State<timerPage> {
       case WorkoutState.resting:
         return Theme.of(context).colorScheme.onPrimary;
       case WorkoutState.breaking:
-        return Theme.of(context).colorScheme.onErrorContainer;
+        return Theme.of(context).colorScheme.onPrimaryContainer;
       default:
         return Theme.of(context).colorScheme.background;
     }
   }
 
+  _getTimerColor(ThemeData theme) {
+    switch (_workout.step) {
+      case WorkoutState.exercising:
+        return Theme.of(context).colorScheme.primary;
+      case WorkoutState.starting:
+      case WorkoutState.resting:
+        return Theme.of(context).colorScheme.onPrimaryContainer;
+      case WorkoutState.breaking:
+        return Theme.of(context).colorScheme.onPrimary;
+      default:
+        return Theme.of(context).colorScheme.primary;
+    }
+  }
+
   _pause() {
     _workout.pause();
+    Wakelock.disable();
+  }
+
+  _stop() {
+    _workout.dispose();
     Wakelock.disable();
   }
 
@@ -109,13 +128,20 @@ class _timerPageState extends State<timerPage> {
           children: <Widget>[
             Text(
               'Round : ${_workout.set}',
+              style: TextStyle(fontSize: 30),
             ),
             Text(
               training.breakDuration.toString(),
             ),
             TimerText(),
-            Actions(trainingDuration: widget.training.trainingDuration),
-            Expanded(child: _buildButtonBar()),
+            //Actions(trainingDuration: widget.training.trainingDuration),
+            Expanded(
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _buildButtonBar())),
+            SizedBox(
+              height: 35,
+            )
           ],
         ),
       ),
@@ -123,6 +149,7 @@ class _timerPageState extends State<timerPage> {
   }
 
   Widget TimerText() {
+    var theme = Theme.of(context);
     final duration = _workout.totalTime;
     String minutesStr = (duration.inMinutes).toString().padLeft(2, '0');
     String secondsStr = (duration.inSeconds % 60).toString().padLeft(2, '0');
@@ -137,7 +164,7 @@ class _timerPageState extends State<timerPage> {
           style: TextStyle(
               fontSize: 70,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary),
+              color: _getTimerColor(theme)),
         ),
       ],
     );
@@ -145,14 +172,67 @@ class _timerPageState extends State<timerPage> {
 
   Widget _buildButtonBar() {
     if (_workout.step == WorkoutState.finished) {
-      return Container();
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(),
+            onPressed: _restart,
+            child: Row(
+              children: [
+                Icon(Icons.replay_rounded),
+                Text(
+                  "Restart",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
     }
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: TextButton(
-        onPressed: _workout.isActive ? _pause : _start,
-        child: Icon(_workout.isActive ? Icons.pause : Icons.play_arrow),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          style: ButtonStyle(),
+          onPressed: _workout.isActive ? _pause : _start,
+          child: Row(
+            children: [
+              _workout.isActive
+                  ? Icon(Icons.pause_rounded)
+                  : Icon(Icons.play_arrow_rounded),
+              Text(
+                _workout.isActive ? "Pause" : "Resume",
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 15,
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).colorScheme.onErrorContainer),
+          onPressed: _stop,
+          child: Row(
+            children: [
+              Icon(
+                Icons.stop_rounded,
+                color: Theme.of(context).colorScheme.onError,
+              ),
+              Text(
+                "Stop",
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
