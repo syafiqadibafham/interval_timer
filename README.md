@@ -1,4 +1,4 @@
-# Workout Timer with interval
+# Training Timer with interval
 
 ## Getting Started
 Flutter Framework was used to construct a simple Timer App project with Material 3 colours.
