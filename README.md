@@ -1,6 +1,16 @@
 # Workout Timer with interval
 
-A basic Timer App project with Material 3 color created using Futter Framework.
+## Description
+Flutter Framework was used to construct a simple Timer App project with Material 3 colours.
+Basic timer features like Start, Stop, Pause, Resume, and Restart the timer are included in the app. It also includes a rest mode between intervals.
+
+## Prerequisites
+- [`confetti: ^0.7.0`](https://pub.dev/packages/confetti)
+- [`flutter_touch_spin: ^2.0.0`](https://pub.dev/packages/flutter_touch_spin)
+- [`google_fonts: ^3.0.1`](https://pub.dev/packages/google_fonts)
+- [`http: ^0.13.4`](https://pub.dev/packages/http)
+- [`numberpicker: ^2.1.1`](https://pub.dev/packages/numberpicker)
+- [`wakelock: ^0.6.2`](https://pub.dev/packages/wakelock)
 
 ## Screenshots
 ### Home Page
