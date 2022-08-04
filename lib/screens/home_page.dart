@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:interval_timer/screens/timer_page.dart';
 import '../model/training_model.dart';
 import '../widgets/custom_button.dart';
-import '../widgets/durationPicker.dart';
+import '../widgets/duration_picker.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
