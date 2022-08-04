@@ -8,6 +8,7 @@ import 'package:interval_timer/main.dart';
 import 'package:interval_timer/screens/timer_page.dart';
 import '../model/ticker.dart';
 import '../model/training_model.dart';
+import '../widgets/customButtons.dart';
 import '../widgets/durationPicker.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -85,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           return DurationPickerDialog(
                             initialDuration: Duration(
                                 seconds: training.trainingDuration.inSeconds),
-                            title: const Text('Excercise time per intervals'),
+                            title: const Text('Training time per intervals'),
                           );
                         },
                       ).then((exerciseTime) {
@@ -106,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Exercise Duration"),
+                          const Text("Training Duration"),
                           Text(
                             training.trainingDuration
                                 .toString()
@@ -172,65 +173,47 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 70,
-                        width: 150,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer),
-                            onPressed: () {
-                              if (training.trainingDuration.inSeconds != 0) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TimerPage(
-                                      training: training,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                var snackBar = SnackBar(
-                                    content: Text(
-                                        'Please insert Training Duration more than 0s'));
-                                // Step 3
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
-                            },
-                            child: Text(
-                              "Start Training",
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary),
-                            )),
+                      customElevatedButton(
+                        onPressed: () {
+                          if (training.trainingDuration.inSeconds != 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TimerPage(
+                                  training: training,
+                                ),
+                              ),
+                            );
+                          } else {
+                            var snackBar = SnackBar(
+                                content: Text(
+                                    'Please insert Training Duration more than 0s'));
+                            // Step 3
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        },
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        forgroundColor: Theme.of(context).colorScheme.primary,
+                        label: "Start Training",
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      SizedBox(
-                        height: 70,
-                        width: 150,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context)
-                                  .colorScheme
-                                  .onErrorContainer,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                training = Training(
-                                    interval: 1,
-                                    trainingDuration: Duration(seconds: 0),
-                                    breakDuration: Duration(seconds: 0));
-                              });
-                            },
-                            child: Text(
-                              "Reset",
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onError),
-                            )),
-                      ),
+                      customElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              training = Training(
+                                  interval: 1,
+                                  trainingDuration: Duration(seconds: 0),
+                                  breakDuration: Duration(seconds: 0));
+                            });
+                          },
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onErrorContainer,
+                          forgroundColor: Theme.of(context).colorScheme.onError,
+                          label: "Reset")
                     ],
                   ),
                 ),
