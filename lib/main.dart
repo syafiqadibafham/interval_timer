@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
-import 'package:interval_timer/model/ticker.dart';
 import 'package:interval_timer/model/training_model.dart';
 import 'package:interval_timer/screens/timer_page.dart';
 import 'color_schemes.dart';

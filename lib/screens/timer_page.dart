@@ -1,15 +1,13 @@
-import 'dart:async';
-import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:interval_timer/quotes.dart';
-import 'package:interval_timer/widgets/customButtons.dart';
+import 'package:interval_timer/widgets/custom_button.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../model/training_model.dart';
 
 class TimerPage extends StatefulWidget {
-  final Training training;
+  final TrainingData training;
 
   TimerPage({Key? key, required this.training}) : super(key: key);
 
@@ -18,9 +16,10 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
-  late Workout workout;
+  late Training workout;
   final confettiController = ConfettiController();
 
+  //This string will be default string, if no Quote can be fetch
   String quoteStr = "Exercise";
 
   @override
@@ -28,7 +27,7 @@ class _TimerPageState extends State<TimerPage> {
     super.initState();
     // Here we take the training value from the MyHomePage object that was created by
     // the Touchspin and DurationPickerDialog widgets, and use it to set our timer.
-    workout = Workout(widget.training, _onWorkoutChanged);
+    workout = Training(widget.training, _onWorkoutChanged);
     //The timer will be start directly by trigger the _start() function
     _start();
     //The quote will be fetch from the API only in the initial state.
@@ -49,13 +48,13 @@ class _TimerPageState extends State<TimerPage> {
 
   String _stateName() {
     switch (workout.step) {
-      case WorkoutState.exercising:
+      case TrainingState.exercising:
         return quoteStr;
-      case WorkoutState.resting:
+      case TrainingState.resting:
         return 'Rest';
-      case WorkoutState.finished:
+      case TrainingState.finished:
         return 'Finished';
-      case WorkoutState.starting:
+      case TrainingState.starting:
         return 'Starting';
       default:
         return '';
@@ -64,10 +63,10 @@ class _TimerPageState extends State<TimerPage> {
 
   _getBackgroundColor(ThemeData theme) {
     switch (workout.step) {
-      case WorkoutState.exercising:
+      case TrainingState.exercising:
         return Theme.of(context).colorScheme.background;
-      case WorkoutState.starting:
-      case WorkoutState.resting:
+      case TrainingState.starting:
+      case TrainingState.resting:
         return Theme.of(context).colorScheme.inversePrimary;
       default:
         return Theme.of(context).colorScheme.background;
@@ -76,10 +75,10 @@ class _TimerPageState extends State<TimerPage> {
 
   _getTimerColor(ThemeData theme) {
     switch (workout.step) {
-      case WorkoutState.exercising:
+      case TrainingState.exercising:
         return Theme.of(context).colorScheme.primary;
-      case WorkoutState.starting:
-      case WorkoutState.resting:
+      case TrainingState.starting:
+      case TrainingState.resting:
         return Theme.of(context).colorScheme.onPrimaryContainer;
       default:
         return Theme.of(context).colorScheme.primary;
@@ -104,7 +103,7 @@ class _TimerPageState extends State<TimerPage> {
 
   _restart() {
     confettiController.stop();
-    workout = Workout(widget.training, _onWorkoutChanged);
+    workout = Training(widget.training, _onWorkoutChanged);
     _start();
   }
 
@@ -116,7 +115,7 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   _onWorkoutChanged() {
-    if (workout.step == WorkoutState.finished) {
+    if (workout.step == TrainingState.finished) {
       Wakelock.disable();
     }
     this.setState(() {});
@@ -145,7 +144,7 @@ class _TimerPageState extends State<TimerPage> {
                   Flexible(
                     flex: 1,
                     child: Text(
-                      'Round : ${workout.set}',
+                      'Round : ${workout.interval}',
                       style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.w500),
                     ),
@@ -193,13 +192,13 @@ class _TimerPageState extends State<TimerPage> {
   //_buildButtonBar() is a list of Button Widget for Pause,Resume,Stop and restart the training
   //the if else is required, to display different button in different workout state.
   Widget _buildButtonBar() {
-    if (workout.step == WorkoutState.finished) {
+    if (workout.step == TrainingState.finished) {
       confettiController.play();
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          customElevatedButton(
+          CustomElevatedButton(
             onPressed: _restart,
             backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
             forgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -219,7 +218,7 @@ class _TimerPageState extends State<TimerPage> {
         //When the _workout.isActive, it means the timer is active/running
         //the pause button will be shown, when the timer is active.
         //when the timer is deactive or in pause mode, the resume button will be shown.
-        customElevatedButton(
+        CustomElevatedButton(
           onPressed: workout.isActive ? _pause : _start,
           backgroundColor: workout.isActive
               ? Theme.of(context).colorScheme.primaryContainer
@@ -235,7 +234,7 @@ class _TimerPageState extends State<TimerPage> {
           width: 15,
         ),
         //This widget is a stop button, to stop the timer.
-        customElevatedButton(
+        CustomElevatedButton(
           onPressed: _stop,
           backgroundColor: Theme.of(context).colorScheme.onErrorContainer,
           forgroundColor: Theme.of(context).colorScheme.onError,

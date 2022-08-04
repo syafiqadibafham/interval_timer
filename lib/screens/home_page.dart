@@ -1,14 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:interval_timer/main.dart';
 import 'package:interval_timer/screens/timer_page.dart';
-import '../model/ticker.dart';
 import '../model/training_model.dart';
-import '../widgets/customButtons.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/durationPicker.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -21,15 +17,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Training training = Training(
+  //This is the initial training data, when user open the App
+  TrainingData training = TrainingData(
       interval: 1,
-      trainingDuration: Duration(seconds: 0),
-      breakDuration: Duration(seconds: 0));
+      trainingDuration: const Duration(seconds: 0),
+      breakDuration: const Duration(seconds: 0));
 
   @override
   Widget build(BuildContext context) {
-    int _interval = training.interval;
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -39,20 +34,19 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Expanded(
               child: Center(
                 child: Text(
-                  "Set your Training",
+                  "Define your Training",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
             const Text("No. of Training intervals:"),
+            //Touchspin widget will create the interger for the Interval object
             TouchSpin(
               min: 1,
               max: 100,
@@ -69,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   training.interval = val.toInt();
                 });
-                log("Intervals : " + training.interval.toString());
+                log("Intervals : ${training.interval}");
               },
             ),
             Row(
@@ -108,6 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text("Training Duration"),
+                          //Duration.toString() method will show the entire string start from the miliseconds
+                          //Therefore, the substring has been use, in order to remove the miliseconds part.
                           Text(
                             training.trainingDuration
                                 .toString()
@@ -147,11 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: BoxDecoration(
                           color:
                               Theme.of(context).colorScheme.secondaryContainer,
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Break Duration"),
+                          const Text("Break Duration"),
                           Text(
                             training.breakDuration.toString().substring(0, 7),
                             style: GoogleFonts.nunitoSans(
@@ -173,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      customElevatedButton(
+                      CustomElevatedButton(
                         onPressed: () {
                           if (training.trainingDuration.inSeconds != 0) {
                             Navigator.push(
@@ -185,10 +182,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             );
                           } else {
-                            var snackBar = SnackBar(
+                            // A snackbar will be shown at the bottom of the screen
+                            // to tell the user to input more than 0s.
+                            var snackBar = const SnackBar(
                                 content: Text(
                                     'Please insert Training Duration more than 0s'));
-                            // Step 3
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           }
@@ -201,13 +199,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(
                         width: 10,
                       ),
-                      customElevatedButton(
+                      CustomElevatedButton(
                           onPressed: () {
                             setState(() {
-                              training = Training(
+                              training = TrainingData(
                                   interval: 1,
-                                  trainingDuration: Duration(seconds: 0),
-                                  breakDuration: Duration(seconds: 0));
+                                  trainingDuration: const Duration(seconds: 0),
+                                  breakDuration: const Duration(seconds: 0));
                             });
                           },
                           backgroundColor:

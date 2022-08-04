@@ -1,13 +1,12 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 
-class Training extends Equatable {
+class TrainingData extends Equatable {
   int interval;
   Duration trainingDuration;
   Duration breakDuration;
 
-  Training({
+  TrainingData({
     required this.interval,
     required this.trainingDuration,
     required this.breakDuration,
@@ -21,89 +20,94 @@ class Training extends Equatable {
   }
 }
 
-enum WorkoutState { initial, starting, exercising, resting, breaking, finished }
+enum TrainingState {
+  initial,
+  starting,
+  exercising,
+  resting,
+  breaking,
+  finished
+}
 
-class Workout {
-  Training _trainingData;
+class Training {
+  final TrainingData _trainingData;
   Timer? _timer;
 
-  /// Callback for when the workout's state has changed.
-  Function _onStateChange;
+  // Callback when the training's state changes.
+  final Function _onStateChange;
 
-  WorkoutState _step = WorkoutState.initial;
+  // initial training state
+  TrainingState _step = TrainingState.initial;
 
-  /// Time left in the current step
+  // Time left in the current step
   late Duration _timeLeft;
 
-  Duration _totalTime = Duration(seconds: 0);
+  Duration _totalTime = const Duration(seconds: 0);
 
-  /// Current set
-  int _set = 0;
+  // Current set
+  int _interval = 0;
 
-  /// Current rep
-  int _rep = 0;
+  Training(this._trainingData, this._onStateChange);
 
-  Workout(this._trainingData, this._onStateChange);
-
-  /// Starts or resumes the workout
+  // Starts or resumes the training
   start() {
-    if (_step == WorkoutState.initial) {
-      _step = WorkoutState.starting;
+    if (_step == TrainingState.initial) {
+      _step = TrainingState.starting;
       _nextStep();
     }
-    _timer = Timer.periodic(Duration(seconds: 1), _tick);
+    _timer = Timer.periodic(const Duration(seconds: 1), _tick);
     _onStateChange();
   }
 
-  /// Pauses the workout
+  // Pauses the training
   pause() {
     _timer?.cancel();
     _onStateChange();
   }
 
-  /// Stop the workout
+  // Stop the training
   stop() {
     _timer?.cancel();
-    _step = WorkoutState.finished;
-    _timeLeft = Duration(seconds: 0);
+    _step = TrainingState.finished;
+    _timeLeft = const Duration(seconds: 0);
     _onStateChange();
   }
 
-  /// Stops the timer without triggering the state change callback.
+  // Stops the timer without triggering the state change callback.
   dispose() {
     _timer?.cancel();
   }
 
   _tick(Timer timer) {
-    if (_step != WorkoutState.starting) {
-      _totalTime += Duration(seconds: 1);
+    if (_step != TrainingState.starting) {
+      _totalTime += const Duration(seconds: 1);
     }
 
     if (_timeLeft.inSeconds == 1) {
       _nextStep();
     } else {
-      _timeLeft -= Duration(seconds: 1);
+      _timeLeft -= const Duration(seconds: 1);
     }
 
     _onStateChange();
   }
 
-  /// Moves the workout to the next step and sets up state for it.
+  // Moves the training to the next step and sets up state for it.
   _nextStep() {
-    if (_step == WorkoutState.exercising) {
-      if (set == _trainingData.interval) {
+    if (_step == TrainingState.exercising) {
+      if (interval == _trainingData.interval) {
         _finish();
       } else {
         _startRest();
       }
-    } else if (_step == WorkoutState.starting ||
-        _step == WorkoutState.resting) {
+    } else if (_step == TrainingState.starting ||
+        _step == TrainingState.resting) {
       _startSet();
     }
   }
 
   _startRest() {
-    _step = WorkoutState.resting;
+    _step = TrainingState.resting;
     if (_trainingData.breakDuration.inSeconds == 0) {
       _nextStep();
       return;
@@ -113,25 +117,22 @@ class Workout {
   }
 
   _startSet() {
-    _set++;
-    _rep = 1;
-    _step = WorkoutState.exercising;
+    _interval++;
+    _step = TrainingState.exercising;
     _timeLeft = _trainingData.trainingDuration;
     //TODO play Start Sound
   }
 
   _finish() {
     _timer?.cancel();
-    _step = WorkoutState.finished;
-    _timeLeft = Duration(seconds: 0);
+    _step = TrainingState.finished;
+    _timeLeft = const Duration(seconds: 0);
     //TODO play Finish Sound
   }
 
   get config => _trainingData;
 
-  get set => _set;
-
-  get rep => _rep;
+  get interval => _interval;
 
   get step => _step;
 
