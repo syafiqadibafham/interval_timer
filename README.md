@@ -26,4 +26,4 @@ A basic Timer App project with Material 3 color created using Futter Framework.
 ## Finish View
 | Light Mode | Dark Mode |
 | ---------------- | ---------------- |
-| ![](screenshots/finish_page_light.png) | ![](screenshots/finish_page_dark.png) |
+| ![](screenshots/finish_view_light.png) | ![](screenshots/finish_view_dark.png) |
