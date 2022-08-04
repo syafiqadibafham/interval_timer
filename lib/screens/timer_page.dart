@@ -9,7 +9,7 @@ import '../model/training_model.dart';
 class TimerPage extends StatefulWidget {
   final TrainingData training;
 
-  TimerPage({Key? key, required this.training}) : super(key: key);
+  const TimerPage({Key? key, required this.training}) : super(key: key);
 
   @override
   State<TimerPage> createState() => _TimerPageState();
