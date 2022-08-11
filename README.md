@@ -1,8 +1,10 @@
-# Workout Timer with interval
+# Training Timer with interval
 
 ## Getting Started
 Flutter Framework was used to construct a simple Timer App project with Material 3 colours.
 Basic timer features like Start, Stop, Pause, Resume, and Restart the timer are included in the app. It also includes a rest mode between intervals.
+
+![](screenshots/Interval_Timer_App_Overview.png)
 
 ## Features
 - Basic timer functionality (Eg. Start, Stop, Pause, Resume and Restart)
