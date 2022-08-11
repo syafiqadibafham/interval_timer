@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               min: 1,
               max: 100,
               step: 1,
-              value: 1,
+              value: training.interval,
               textStyle: const TextStyle(fontSize: 36),
               iconSize: 44.0,
               addIcon: const Icon(Icons.add_circle_outline),

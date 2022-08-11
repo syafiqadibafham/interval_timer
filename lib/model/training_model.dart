@@ -16,7 +16,7 @@ class TrainingData extends Equatable {
   List<Object?> get props => [interval, trainingDuration, breakDuration];
 
   Duration getTotalTime() {
-    return (trainingDuration * interval) + (breakDuration * interval);
+    return ((trainingDuration * interval) + (breakDuration * (interval - 1)));
   }
 }
 
@@ -88,7 +88,6 @@ class Training {
     } else {
       _timeLeft -= const Duration(seconds: 1);
     }
-
     _onStateChange();
   }
 
